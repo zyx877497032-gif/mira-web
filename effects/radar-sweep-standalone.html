@@ -1,0 +1,257 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Radar Sweep Effect — Standalone</title>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body { background: #09090B; overflow: hidden; }
+
+    .container {
+      position: relative;
+      width: 100vw;
+      height: 100vh;
+    }
+
+    .webgl-canvas-wrap {
+      position: absolute;
+      top: 0; left: 0;
+      width: 100%; height: 100%;
+      z-index: 0;
+    }
+
+    .webgl-canvas-wrap canvas {
+      display: block;
+      width: 100%; height: 100%;
+      opacity: 0.35;
+    }
+
+    /* SVG grid overlay — concentric circles + crosshairs */
+    .grid-overlay {
+      position: absolute;
+      top: 50%; left: 50%;
+      transform: translate(-50%, -50%);
+      width: 90%;
+      max-width: 700px;
+      height: auto;
+      z-index: 1;
+      pointer-events: none;
+      opacity: 0.7;
+    }
+
+    /* CSS vertical scanlines */
+    .scanlines {
+      position: absolute;
+      top: 0; left: 0;
+      width: 100%; height: 100%;
+      z-index: 2;
+      pointer-events: none;
+      background: repeating-linear-gradient(
+        to right,
+        transparent 0,
+        transparent 3px,
+        rgba(0, 0, 0, 0.08) 3px,
+        rgba(0, 0, 0, 0.08) 6px
+      );
+      opacity: 0.25;
+    }
+
+    .info {
+      position: fixed;
+      bottom: 20px; left: 20px;
+      color: rgba(161,161,170,0.5);
+      font: 12px/1.4 monospace;
+      z-index: 10;
+    }
+  </style>
+</head>
+<body>
+
+<div class="container">
+  <div class="webgl-canvas-wrap" id="radar-container"></div>
+
+  <svg class="grid-overlay" viewBox="0 0 100 100" preserveAspectRatio="xMidYMid meet" aria-hidden="true">
+    <circle cx="50" cy="50" r="15" fill="none" stroke="rgba(161,161,170,0.12)" stroke-width="0.2"/>
+    <circle cx="50" cy="50" r="30" fill="none" stroke="rgba(161,161,170,0.10)" stroke-width="0.2"/>
+    <circle cx="50" cy="50" r="45" fill="none" stroke="rgba(161,161,170,0.08)" stroke-width="0.2"/>
+    <line x1="50" y1="5" x2="50" y2="95" stroke="rgba(161,161,170,0.08)" stroke-width="0.15"/>
+    <line x1="5" y1="50" x2="95" y2="50" stroke="rgba(161,161,170,0.08)" stroke-width="0.15"/>
+    <line x1="48" y1="50" x2="52" y2="50" stroke="rgba(161,161,170,0.2)" stroke-width="0.3"/>
+    <line x1="50" y1="48" x2="50" y2="52" stroke="rgba(161,161,170,0.2)" stroke-width="0.3"/>
+  </svg>
+
+  <div class="scanlines" aria-hidden="true"></div>
+</div>
+
+<div class="info">Radar Sweep Effect — adapted from neuform.ai template, zinc/silver palette</div>
+
+<script>
+class RadarSweepEffect {
+  constructor(containerId) {
+    this._container = document.getElementById(containerId);
+    if (!this._container) return;
+
+    this._destroyed = false;
+    this._startTime = 0;
+    this._rafId = null;
+
+    this._canvas = document.createElement('canvas');
+    this._canvas.style.display = 'block';
+    this._canvas.style.width = '100%';
+    this._canvas.style.height = '100%';
+    this._container.appendChild(this._canvas);
+
+    this._gl = this._canvas.getContext('webgl', { alpha: true, premultipliedAlpha: false });
+    if (!this._gl) return;
+
+    this._initShaders();
+    this._initBuffers();
+    this._getUniformLocations();
+    this.resize();
+    this._initEventListeners();
+    this._startRenderLoop();
+  }
+
+  _initShaders() {
+    const gl = this._gl;
+
+    const vertSrc = `
+      attribute vec2 position;
+      void main() { gl_Position = vec4(position, 0.0, 1.0); }
+    `;
+
+    const fragSrc = `
+      precision highp float;
+      uniform vec2 u_resolution;
+      uniform float u_time;
+
+      void main() {
+        vec2 uv = (gl_FragCoord.xy - 0.5 * u_resolution.xy) / min(u_resolution.x, u_resolution.y);
+
+        float dist = length(uv);
+        float angle = atan(uv.y, uv.x);
+
+        // Rotating sweep beam
+        float sweep = fract((angle - u_time * 1.2) / 6.28318);
+        float radarBeam = smoothstep(0.0, 0.15, sweep) * (1.0 - smoothstep(0.15, 0.35, sweep));
+
+        // Circle mask
+        float circleMask = smoothstep(0.55, 0.45, dist);
+        radarBeam *= circleMask;
+
+        // Concentric ring glow
+        float rings = 0.0;
+        rings += smoothstep(0.008, 0.0, abs(dist - 0.15)) * 0.5;
+        rings += smoothstep(0.008, 0.0, abs(dist - 0.30)) * 0.4;
+        rings += smoothstep(0.008, 0.0, abs(dist - 0.45)) * 0.3;
+        rings *= circleMask;
+
+        // Center pulsing dot
+        float centerDot = smoothstep(0.02, 0.005, dist) * (0.7 + 0.3 * sin(u_time * 3.0));
+
+        // Zinc/silver palette
+        vec3 beamColor = vec3(0.62, 0.68, 0.78);
+        vec3 ringColor = vec3(0.44, 0.47, 0.55);
+        vec3 dotColor  = vec3(0.85, 0.88, 0.92);
+
+        vec3 col = vec3(0.0);
+        col += beamColor * radarBeam * 0.6;
+        col += ringColor * rings;
+        col += dotColor * centerDot;
+
+        float alpha = radarBeam * 0.6 + rings + centerDot;
+        alpha = clamp(alpha, 0.0, 1.0);
+
+        gl_FragColor = vec4(col, alpha);
+      }
+    `;
+
+    const vert = gl.createShader(gl.VERTEX_SHADER);
+    gl.shaderSource(vert, vertSrc);
+    gl.compileShader(vert);
+
+    const frag = gl.createShader(gl.FRAGMENT_SHADER);
+    gl.shaderSource(frag, fragSrc);
+    gl.compileShader(frag);
+
+    this._program = gl.createProgram();
+    gl.attachShader(this._program, vert);
+    gl.attachShader(this._program, frag);
+    gl.linkProgram(this._program);
+
+    this._vertShader = vert;
+    this._fragShader = frag;
+    gl.useProgram(this._program);
+  }
+
+  _initBuffers() {
+    const gl = this._gl;
+    const vertices = new Float32Array([-1,-1, 1,-1, -1,1, -1,1, 1,-1, 1,1]);
+    this._buffer = gl.createBuffer();
+    gl.bindBuffer(gl.ARRAY_BUFFER, this._buffer);
+    gl.bufferData(gl.ARRAY_BUFFER, vertices, gl.STATIC_DRAW);
+    const posLoc = gl.getAttribLocation(this._program, 'position');
+    gl.enableVertexAttribArray(posLoc);
+    gl.vertexAttribPointer(posLoc, 2, gl.FLOAT, false, 0, 0);
+  }
+
+  _getUniformLocations() {
+    const gl = this._gl;
+    this._uResolution = gl.getUniformLocation(this._program, 'u_resolution');
+    this._uTime = gl.getUniformLocation(this._program, 'u_time');
+  }
+
+  resize() {
+    if (this._destroyed || !this._canvas) return;
+    const dpr = Math.min(window.devicePixelRatio || 1, 2);
+    const rect = this._container.getBoundingClientRect();
+    this._canvas.width = Math.round(rect.width * dpr);
+    this._canvas.height = Math.round(rect.height * dpr);
+    const gl = this._gl;
+    gl.viewport(0, 0, this._canvas.width, this._canvas.height);
+    gl.useProgram(this._program);
+    gl.uniform2f(this._uResolution, this._canvas.width, this._canvas.height);
+  }
+
+  _initEventListeners() {
+    this._onResize = () => { if (!this._destroyed) this.resize(); };
+    window.addEventListener('resize', this._onResize);
+  }
+
+  _startRenderLoop() {
+    this._startTime = performance.now();
+    const render = (timestamp) => {
+      if (this._destroyed) return;
+      this._rafId = requestAnimationFrame(render);
+      const gl = this._gl;
+      gl.clearColor(0, 0, 0, 0);
+      gl.clear(gl.COLOR_BUFFER_BIT);
+      gl.enable(gl.BLEND);
+      gl.blendFunc(gl.SRC_ALPHA, gl.ONE_MINUS_SRC_ALPHA);
+      gl.useProgram(this._program);
+      gl.uniform1f(this._uTime, (timestamp - this._startTime) * 0.001);
+      gl.drawArrays(gl.TRIANGLES, 0, 6);
+    };
+    this._rafId = requestAnimationFrame(render);
+  }
+
+  destroy() {
+    this._destroyed = true;
+    if (this._rafId) cancelAnimationFrame(this._rafId);
+    window.removeEventListener('resize', this._onResize);
+    const gl = this._gl;
+    if (gl) {
+      if (this._buffer) gl.deleteBuffer(this._buffer);
+      if (this._program) gl.deleteProgram(this._program);
+      if (this._vertShader) gl.deleteShader(this._vertShader);
+      if (this._fragShader) gl.deleteShader(this._fragShader);
+    }
+    if (this._canvas && this._canvas.parentNode) this._canvas.parentNode.removeChild(this._canvas);
+  }
+}
+
+new RadarSweepEffect('radar-container');
+</script>
+</body>
+</html>

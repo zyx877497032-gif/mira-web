@@ -1,0 +1,751 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Mira — Hiring Agent System. Tell Mira who you need. Your AI team handles the rest. From managing 10 threads to managing 100.">
+  <meta name="theme-color" content="#18181B">
+  <title>Mira — Hiring Agent System</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Geologica:wght@300..900&family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&family=Source+Serif+4:ital,opsz,wght@0,8..60,200..900;1,8..60,200..900&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="styles.css">
+  <script src="https://unpkg.com/lucide@latest"></script>
+  <!-- Three.js for dotted video effect -->
+  <script src="https://unpkg.com/three@0.181.0/build/three.module.min.js" type="module"></script>
+</head>
+<body>
+
+  <!-- ============================================
+       1. NAVIGATION
+       ============================================ -->
+  <header class="nav" id="nav">
+    <div class="nav__container">
+      <a href="/" class="nav__logo">Mira</a>
+      <nav class="nav__links" aria-label="Main navigation">
+        <a href="#product" class="nav__link">Product</a>
+        <a href="#solutions" class="nav__link">Solutions</a>
+        <a href="#" class="nav__link">Pricing</a>
+        <a href="#" class="nav__link">Resources</a>
+      </nav>
+      <a href="#cta" class="nav__cta btn btn--primary btn--sm">Get Started</a>
+      <button class="nav__toggle" aria-label="Toggle menu" aria-expanded="false">
+        <i data-lucide="menu"></i>
+      </button>
+    </div>
+    <!-- Mobile menu -->
+    <div class="nav__menu" aria-hidden="true">
+      <a href="#product" class="nav__menu-link">Product</a>
+      <a href="#solutions" class="nav__menu-link">Solutions</a>
+      <a href="#" class="nav__menu-link">Pricing</a>
+      <a href="#" class="nav__menu-link">Resources</a>
+      <a href="#cta" class="nav__menu-cta btn btn--primary">Get Started</a>
+    </div>
+  </header>
+
+  <main>
+
+    <!-- ============================================
+         2. HERO
+         ============================================ -->
+    <section class="hero" id="hero">
+      <div class="hero__dotted-video" id="hero-dotted-video-container">
+        <!-- WebGL dotted video canvas injected here -->
+      </div>
+
+
+      <div class="hero__container">
+        <div class="hero__badge hero-reveal hero-reveal--d1">
+          <span class="hero__badge-dot"></span>
+          HIRING AGENT SYSTEM &mdash; Redefining Recruitment
+        </div>
+        <h1 class="hero__headline hero-reveal hero-reveal--d2">The Agent-Powered Recruiting Platform</h1>
+        <p class="hero__subheadline hero-reveal hero-reveal--d3">Every candidate, seen by the world.</p>
+        <div class="hero__actions hero-reveal hero-reveal--d5">
+          <a href="#cta" class="btn btn--primary btn--lg">Get Started &mdash; Free</a>
+          <a href="#" class="btn btn--ghost btn--lg">
+            <i data-lucide="play-circle" class="btn__icon"></i>
+            Watch Demo (2 min)
+          </a>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============================================
+         3. SCENES (Pain Point Scenarios)
+         ============================================ -->
+    <section class="section section--scenes scenes" id="scenes" data-animate>
+      <div class="scenes__container">
+        <span class="section-label">PAIN POINTS</span>
+        <h2 class="scenes__headline">You're not the problem. Your tools are.</h2>
+
+        <div class="scenes__grid">
+
+          <article class="scene-card">
+            <span class="scene-card__number">01</span>
+            <h3 class="scene-card__title">Pipeline Chaos</h3>
+            <p class="scene-card__body">Monday standup. Your VP of Engineering asks about that senior candidate. You open your ATS, click through 3 pages, find the record &mdash; last updated 9 days ago. You didn't forget to follow up. You were following up on 27 other people.</p>
+          </article>
+
+          <article class="scene-card">
+            <span class="scene-card__number">02</span>
+            <h3 class="scene-card__title">The Sourcing Grind</h3>
+            <p class="scene-card__body">One mid-to-senior role. <strong>120 candidates*</strong> reached out to. <strong>8 meaningful conversations*</strong>. <strong>1 offer accepted*</strong>. Your sourcing work consumes <strong>62%* of your week</strong>.</p>
+          </article>
+
+          <article class="scene-card">
+            <span class="scene-card__number">03</span>
+            <h3 class="scene-card__title">The Feedback Black Hole</h3>
+            <p class="scene-card__body">A hiring manager says "great person, wrong role." That note lives in Slack message #847. By the time you remember, the candidate has already signed elsewhere.</p>
+          </article>
+
+          <article class="scene-card">
+            <span class="scene-card__number">04</span>
+            <h3 class="scene-card__title">Reporting Theater</h3>
+            <p class="scene-card__body">Every Friday afternoon: <strong>2.5 hours*</strong> pulling data from 5 different tools to build a report nobody reads carefully. Monday morning, your boss still asks: "How many people are actually in the pipeline right now?"</p>
+          </article>
+
+        </div>
+
+        <p class="scenes__hook">These scenes play out in every recruiting team, every week. But the problem was never you &mdash; it's that your tools were never built for parallel workloads.</p>
+      </div>
+    </section>
+
+    <!-- ============================================
+         4. PARADIGM (Old Paradigm Deconstruction)
+         ============================================ -->
+    <section class="section section--paradigm paradigm" id="paradigm" data-animate>
+      <div class="paradigm__container">
+        <span class="section-label">THE PARADIGM SHIFT</span>
+        <h2 class="paradigm__headline">The ATS isn't the solution. The ATS is the problem.</h2>
+
+        <div class="paradigm__table">
+
+          <div class="paradigm__row">
+            <div class="paradigm__assumption">
+              <span class="paradigm__label">Assumption</span>
+              <h4 class="paradigm__item-title">Recruiting is linear</h4>
+              <p class="paradigm__item-desc">R&eacute;sum&eacute; in &rarr; screen &rarr; interview &rarr; hire. A straight line.</p>
+            </div>
+            <div class="paradigm__reality">
+              <span class="paradigm__label">Reality</span>
+              <h4 class="paradigm__item-title">Recruiting is massively parallel</h4>
+              <p class="paradigm__item-desc">15 open roles, 47 active candidates, 9 hiring managers' calendars. Nothing moves in a straight line.</p>
+            </div>
+          </div>
+
+          <div class="paradigm__row">
+            <div class="paradigm__assumption">
+              <span class="paradigm__label">Assumption</span>
+              <h4 class="paradigm__item-title">Humans execute, tools record</h4>
+              <p class="paradigm__item-desc">The ATS is a database. You enter data. It stores data.</p>
+            </div>
+            <div class="paradigm__reality">
+              <span class="paradigm__label">Reality</span>
+              <h4 class="paradigm__item-title">Records don't create action</h4>
+              <p class="paradigm__item-desc">You don't need a better database. You need teammates who can source, follow up, and coordinate.</p>
+            </div>
+          </div>
+
+          <div class="paradigm__row">
+            <div class="paradigm__assumption">
+              <span class="paradigm__label">Assumption</span>
+              <h4 class="paradigm__item-title">Efficiency comes from standardization</h4>
+              <p class="paradigm__item-desc">Uniform templates, uniform process, uniform scorecards.</p>
+            </div>
+            <div class="paradigm__reality">
+              <span class="paradigm__label">Reality</span>
+              <h4 class="paradigm__item-title">Every role is a unique campaign</h4>
+              <p class="paradigm__item-desc">Hiring a VP of Engineering and a Junior Designer require completely different strategies. Standardization is an escape from complexity.</p>
+            </div>
+          </div>
+
+          <div class="paradigm__row">
+            <div class="paradigm__assumption">
+              <span class="paradigm__label">Assumption</span>
+              <h4 class="paradigm__item-title">Each recruiter owns their roles, and that's enough</h4>
+              <p class="paradigm__item-desc">Divide and conquer by headcount.</p>
+            </div>
+            <div class="paradigm__reality">
+              <span class="paradigm__label">Reality</span>
+              <h4 class="paradigm__item-title">Silos create redundant work</h4>
+              <p class="paradigm__item-desc">Three recruiters on your team may be sourcing the same candidate simultaneously. Nobody knows.</p>
+            </div>
+          </div>
+
+        </div>
+
+        <p class="paradigm__closing">For 20 years, recruiting tools evolved toward "a better database." But what recruiters needed was never a database &mdash; it was a team that could work alongside them.</p>
+      </div>
+    </section>
+
+    <!-- ============================================
+         5. METHODOLOGY (Three Pillars)
+         ============================================ -->
+    <section class="section section--methodology methodology" id="methodology" data-animate>
+      <div class="methodology__container">
+        <span class="section-label">THE METHODOLOGY</span>
+        <h2 class="methodology__headline">Three truths about recruiting that should have shaped every tool &mdash; but didn't.</h2>
+
+        <div class="methodology__grid">
+
+          <article class="methodology-card">
+            <div class="methodology-card__icon">
+              <i data-lucide="infinity"></i>
+            </div>
+            <h3 class="methodology-card__title">Continuous Pipeline</h3>
+            <p class="methodology-card__body">Recruiting isn't a project with a start and end date. It's a pipeline that never stops. Today's candidate might be right in three months, onboarded in six. You need a system that keeps the pipeline alive &mdash; not one that resets to zero every time a new role opens. Mira turns your pipeline into a compounding asset, not a disposable one.</p>
+            <div class="methodology-card__visual">
+              <div class="mcard-illust mcard-illust--pipeline">
+                <div class="mcard-illust__track">
+                  <div class="mcard-illust__node"><span class="mcard-illust__avatar">JD</span><span class="mcard-illust__stage">Sourced</span></div>
+                  <div class="mcard-illust__node"><span class="mcard-illust__avatar">ML</span><span class="mcard-illust__stage">Screen</span></div>
+                  <div class="mcard-illust__node"><span class="mcard-illust__avatar">SK</span><span class="mcard-illust__stage">Interview</span></div>
+                  <div class="mcard-illust__node"><span class="mcard-illust__avatar">AW</span><span class="mcard-illust__stage">Offer</span></div>
+                  <div class="mcard-illust__node"><span class="mcard-illust__avatar">RZ</span><span class="mcard-illust__stage">Sourced</span></div>
+                  <div class="mcard-illust__node"><span class="mcard-illust__avatar">TH</span><span class="mcard-illust__stage">Screen</span></div>
+                  <!-- Duplicate for seamless loop -->
+                  <div class="mcard-illust__node"><span class="mcard-illust__avatar">JD</span><span class="mcard-illust__stage">Sourced</span></div>
+                  <div class="mcard-illust__node"><span class="mcard-illust__avatar">ML</span><span class="mcard-illust__stage">Screen</span></div>
+                  <div class="mcard-illust__node"><span class="mcard-illust__avatar">SK</span><span class="mcard-illust__stage">Interview</span></div>
+                  <div class="mcard-illust__node"><span class="mcard-illust__avatar">AW</span><span class="mcard-illust__stage">Offer</span></div>
+                  <div class="mcard-illust__node"><span class="mcard-illust__avatar">RZ</span><span class="mcard-illust__stage">Sourced</span></div>
+                  <div class="mcard-illust__node"><span class="mcard-illust__avatar">TH</span><span class="mcard-illust__stage">Screen</span></div>
+                </div>
+                <div class="mcard-illust__pill"><span class="mcard-illust__dot"></span>Pipeline active &middot; never stops</div>
+              </div>
+            </div>
+          </article>
+
+          <article class="methodology-card">
+            <div class="methodology-card__icon">
+              <i data-lucide="git-branch"></i>
+            </div>
+            <h3 class="methodology-card__title">Async Coordination</h3>
+            <p class="methodology-card__body">The hiring manager is traveling. The candidate is in a different time zone. HR is firefighting another urgent role. Recruiting is inherently asynchronous &mdash; but every tool assumes everyone is online at the same time. Mira lets each thread move independently. Wait where waiting is necessary. Automate where automation is possible.</p>
+            <div class="methodology-card__visual">
+              <div class="mcard-illust mcard-illust--async">
+                <div class="mcard-illust__timeline">
+                  <div class="mcard-illust__event mcard-illust__event--d1">
+                    <span class="mcard-illust__time">09:14 PST</span>
+                    <span class="mcard-illust__actor">Hiring Manager</span>
+                    <span class="mcard-illust__label-badge mcard-illust__label-badge--green">Approved</span>
+                  </div>
+                  <div class="mcard-illust__event mcard-illust__event--d2">
+                    <span class="mcard-illust__time">22:31 SGT</span>
+                    <span class="mcard-illust__actor">Candidate</span>
+                    <span class="mcard-illust__label-badge mcard-illust__label-badge--blue">Replied</span>
+                  </div>
+                  <div class="mcard-illust__event mcard-illust__event--d3">
+                    <span class="mcard-illust__time">14:05 CET</span>
+                    <span class="mcard-illust__actor">HR Lead</span>
+                    <span class="mcard-illust__label-badge mcard-illust__label-badge--amber">Reviewing</span>
+                  </div>
+                  <div class="mcard-illust__event mcard-illust__event--d4">
+                    <span class="mcard-illust__time">Always on</span>
+                    <span class="mcard-illust__actor">Mira Agent</span>
+                    <span class="mcard-illust__label-badge mcard-illust__label-badge--green">Sent follow-up</span>
+                  </div>
+                </div>
+                <div class="mcard-illust__pill"><span class="mcard-illust__dot"></span>Events across timezones</div>
+              </div>
+            </div>
+          </article>
+
+          <article class="methodology-card">
+            <div class="methodology-card__icon">
+              <i data-lucide="layers"></i>
+            </div>
+            <h3 class="methodology-card__title">Parallel Execution</h3>
+            <p class="methodology-card__body">A single recruiter managing 8 to 15 open roles simultaneously isn't an exception. It's the norm. Yet no tool is designed for parallelism &mdash; they all assume you handle one thing at a time. Mira gives you an AI team. Go from managing 10 threads to managing 100.</p>
+            <div class="methodology-card__visual">
+              <div class="mcard-illust mcard-illust--parallel">
+                <div class="mcard-illust__lanes">
+                  <div class="mcard-illust__lane">
+                    <div class="mcard-illust__lane-header"><span class="mcard-illust__lane-label">Sourcing</span><span class="mcard-illust__lane-stat">42/58</span></div>
+                    <div class="mcard-illust__bar"><div class="mcard-illust__bar-fill" style="--target-width: 72%"></div></div>
+                  </div>
+                  <div class="mcard-illust__lane">
+                    <div class="mcard-illust__lane-header"><span class="mcard-illust__lane-label">Outreach</span><span class="mcard-illust__lane-stat">23/49</span></div>
+                    <div class="mcard-illust__bar"><div class="mcard-illust__bar-fill mcard-illust__bar-fill--blue" style="--target-width: 47%"></div></div>
+                  </div>
+                  <div class="mcard-illust__lane">
+                    <div class="mcard-illust__lane-header"><span class="mcard-illust__lane-label">Scheduling</span><span class="mcard-illust__lane-stat">8/8</span></div>
+                    <div class="mcard-illust__bar"><div class="mcard-illust__bar-fill mcard-illust__bar-fill--done" style="--target-width: 100%"></div></div>
+                  </div>
+                  <div class="mcard-illust__lane">
+                    <div class="mcard-illust__lane-header"><span class="mcard-illust__lane-label">Tracking</span><span class="mcard-illust__lane-stat">47/55</span></div>
+                    <div class="mcard-illust__bar"><div class="mcard-illust__bar-fill mcard-illust__bar-fill--amber" style="--target-width: 85%"></div></div>
+                  </div>
+                </div>
+                <div class="mcard-illust__pill"><span class="mcard-illust__dot"></span>4 agents running parallel</div>
+              </div>
+            </div>
+          </article>
+
+        </div>
+
+        <p class="methodology__closing">Continuous. Asynchronous. Parallel. These are the operating principles of real recruiting. Mira wasn't built by adding features to the old paradigm &mdash; it was built by rewriting the logic from these three truths.</p>
+      </div>
+    </section>
+
+    <!-- ============================================
+         6. PRODUCT (Product Reveal)
+         ============================================ -->
+    <section class="section section--product product" id="product" data-animate>
+      <div class="product__container">
+        <span class="section-label">THE PRODUCT</span>
+        <h2 class="product__headline">Mira is not a recruiting tool.</h2>
+        <p class="product__subheadline">Mira is your recruiting team.</p>
+        <p class="product__description">Traditional tools give you an interface to do repetitive work faster. Mira is different &mdash; it gives you an AI team. Each Agent has a clear role: one sources, one communicates with candidates, one coordinates interviews, one tracks data. They run 24 hours a day, in parallel. You make decisions. They execute.</p>
+
+        <p class="product__anchor">From managing 10 threads to managing 100.</p>
+
+        <!-- 3-Step Workflow -->
+        <div class="workflow">
+          <article class="workflow__step">
+            <div class="workflow__step-number">
+              <i data-lucide="message-square-text"></i>
+            </div>
+            <h3 class="workflow__step-title">Describe your hiring mission</h3>
+            <p class="workflow__step-body">Tell Mira what you're hiring for, what standards matter, what pace you need. No forms. No workflow configuration. No learning curve.</p>
+
+            <!-- Embedded Mission Input illustration -->
+            <div class="showcase-card showcase-card--embedded">
+              <div class="showcase-card__inner">
+                <div class="showcase-card__grid" aria-hidden="true"></div>
+                <div class="showcase-card__header">
+                  <svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M2 3a1 1 0 011-1h10a1 1 0 011 1v8a1 1 0 01-1 1H5l-3 3V3z" stroke="currentColor" stroke-width="1.2" stroke-linejoin="round"/></svg>
+                  <span class="showcase-card__title">Mission Brief</span>
+                </div>
+                <div class="showcase-card__chat">
+                  <div class="showcase-card__chat-bubble showcase-card__chat-bubble--user">
+                    <span>Senior Full-Stack Engineer, remote, must know React + Go, start within 3 weeks</span>
+                  </div>
+                  <div class="showcase-card__chat-bubble showcase-card__chat-bubble--ai">
+                    <span>Got it. Sourcing from 30+ channels, targeting candidates with 5+ yrs React and Go experience, remote-friendly. Launching now.</span>
+                  </div>
+                  <div class="showcase-card__chat-typing" aria-hidden="true">
+                    <span></span><span></span><span></span>
+                  </div>
+                </div>
+                <div class="showcase-card__pill"><span class="showcase-card__pill-dot" aria-hidden="true"></span><span>Mission accepted</span></div>
+              </div>
+            </div>
+          </article>
+
+          <div class="workflow__connector" aria-hidden="true">
+            <i data-lucide="chevron-right"></i>
+          </div>
+
+          <article class="workflow__step">
+            <div class="workflow__step-number">
+              <i data-lucide="bot"></i>
+            </div>
+            <h3 class="workflow__step-title">Agent Teams execute in parallel</h3>
+            <p class="workflow__step-body">The Sourcing Agent pulls from 30+ data sources*. The Outreach Agent sends personalized messages. The Scheduling Agent coordinates interviews. The Tracking Agent updates your pipeline in real time.</p>
+
+            <!-- Embedded Agent Status illustration -->
+            <div class="showcase-card showcase-card--embedded">
+              <div class="showcase-card__inner">
+                <div class="showcase-card__grid" aria-hidden="true"></div>
+                <div class="showcase-card__header">
+                  <svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true"><rect x="1" y="1" width="6" height="6" rx="1.5" stroke="currentColor" stroke-width="1.2"/><rect x="9" y="1" width="6" height="6" rx="1.5" stroke="currentColor" stroke-width="1.2"/><rect x="1" y="9" width="6" height="6" rx="1.5" stroke="currentColor" stroke-width="1.2"/><rect x="9" y="9" width="6" height="6" rx="1.5" stroke="currentColor" stroke-width="1.2"/></svg>
+                  <span class="showcase-card__title">Agent Team Status</span>
+                </div>
+                <div class="showcase-card__agents">
+                  <div class="showcase-card__agent-row">
+                    <div class="showcase-card__agent-icon" aria-hidden="true"><svg width="14" height="14" viewBox="0 0 14 14" fill="none"><circle cx="7" cy="7" r="5.5" stroke="currentColor" stroke-width="1.2"/><path d="M7 4v3l2 1.5" stroke="currentColor" stroke-width="1.2" stroke-linecap="round"/></svg></div>
+                    <div class="showcase-card__agent-info"><span class="showcase-card__agent-name">Sourcing Agent</span><span class="showcase-card__agent-action">Scanning 30+ sources...</span></div>
+                    <span class="showcase-card__badge showcase-card__badge--active">Active</span>
+                  </div>
+                  <div class="showcase-card__agent-row">
+                    <div class="showcase-card__agent-icon" aria-hidden="true"><svg width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M2 4l5 3 5-3" stroke="currentColor" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"/><rect x="1.5" y="2.5" width="11" height="9" rx="1.5" stroke="currentColor" stroke-width="1.2"/></svg></div>
+                    <div class="showcase-card__agent-info"><span class="showcase-card__agent-name">Outreach Agent</span><span class="showcase-card__agent-action">Sending 12 messages</span></div>
+                    <span class="showcase-card__badge showcase-card__badge--sending">Sending</span>
+                  </div>
+                  <div class="showcase-card__agent-row">
+                    <div class="showcase-card__agent-icon" aria-hidden="true"><svg width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M3 7.5l2.5 2.5L11 4" stroke="currentColor" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"/><circle cx="7" cy="7" r="5.5" stroke="currentColor" stroke-width="1.2"/></svg></div>
+                    <div class="showcase-card__agent-info"><span class="showcase-card__agent-name">Tracking Agent</span><span class="showcase-card__agent-action">Pipeline updated</span></div>
+                    <span class="showcase-card__badge showcase-card__badge--done">Done</span>
+                  </div>
+                </div>
+                <div class="showcase-card__pill"><span class="showcase-card__pill-dot" aria-hidden="true"></span><span>3 agents running parallel</span></div>
+              </div>
+            </div>
+          </article>
+
+          <div class="workflow__connector" aria-hidden="true">
+            <i data-lucide="chevron-right"></i>
+          </div>
+
+          <article class="workflow__step">
+            <div class="workflow__step-number">
+              <i data-lucide="check-circle"></i>
+            </div>
+            <h3 class="workflow__step-title">You decide. Mira delivers.</h3>
+            <p class="workflow__step-body">Every morning, you open Mira to a briefing &mdash; not a to-do list. How many candidates were reached last night. How many responded. Which interviews are locked in. Which candidates need your personal attention.</p>
+
+            <!-- Embedded Pipeline Intelligence illustration -->
+            <div class="showcase-card showcase-card--embedded">
+              <div class="showcase-card__inner">
+                <div class="showcase-card__grid" aria-hidden="true"></div>
+                <div class="showcase-card__header">
+                  <svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M2 13V5l3-3h6l3 3v8a1 1 0 01-1 1H3a1 1 0 01-1-1z" stroke="currentColor" stroke-width="1.2" stroke-linejoin="round"/><path d="M5 2v3H2" stroke="currentColor" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"/><path d="M11 2v3h3" stroke="currentColor" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                  <span class="showcase-card__title">Pipeline Intelligence</span>
+                </div>
+                <div class="showcase-card__pipeline">
+                  <div class="showcase-card__pipeline-scan" aria-hidden="true"></div>
+                  <div class="showcase-card__stage">
+                    <span class="showcase-card__stage-number">47</span>
+                    <span class="showcase-card__stage-label">Sourced</span>
+                    <div class="showcase-card__stage-dots" aria-hidden="true"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></div>
+                  </div>
+                  <div class="showcase-card__stage-arrow" aria-hidden="true"><svg width="12" height="12" viewBox="0 0 12 12" fill="none"><path d="M4 2l4 4-4 4" stroke="currentColor" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+                  <div class="showcase-card__stage">
+                    <span class="showcase-card__stage-number">12</span>
+                    <span class="showcase-card__stage-label">Screening</span>
+                    <div class="showcase-card__stage-dots" aria-hidden="true"><span></span><span></span><span></span><span></span><span></span><span></span></div>
+                  </div>
+                  <div class="showcase-card__stage-arrow" aria-hidden="true"><svg width="12" height="12" viewBox="0 0 12 12" fill="none"><path d="M4 2l4 4-4 4" stroke="currentColor" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+                  <div class="showcase-card__stage">
+                    <span class="showcase-card__stage-number">8</span>
+                    <span class="showcase-card__stage-label">Interview</span>
+                    <div class="showcase-card__stage-dots" aria-hidden="true"><span></span><span></span><span></span><span></span></div>
+                  </div>
+                  <div class="showcase-card__stage-arrow" aria-hidden="true"><svg width="12" height="12" viewBox="0 0 12 12" fill="none"><path d="M4 2l4 4-4 4" stroke="currentColor" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+                  <div class="showcase-card__stage">
+                    <span class="showcase-card__stage-number">3</span>
+                    <span class="showcase-card__stage-label">Offer</span>
+                    <div class="showcase-card__stage-dots" aria-hidden="true"><span></span><span></span><span></span></div>
+                  </div>
+                </div>
+                <div class="showcase-card__pill"><span class="showcase-card__pill-dot" aria-hidden="true"></span><span>Evaluating candidate fit...</span></div>
+              </div>
+            </div>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============================================
+         7. STATS BANNER
+         ============================================ -->
+    <section class="section section--stats-banner section--dark stats-banner" data-animate>
+      <div class="stats-banner__webgl" id="stats-banner-canvas"></div>
+      <div class="stats-banner__container">
+        <p class="stats-banner__text">Recruiters spend <strong>62%*</strong> of their week on sourcing. That's not efficiency &mdash; it's a design flaw in every tool they use.</p>
+        <a href="#cta" class="stats-banner__cta">Start saving time <i data-lucide="arrow-right" class="stats-banner__arrow"></i></a>
+      </div>
+    </section>
+
+    <!-- ============================================
+         8. SOURCES (Data Source Channels)
+         ============================================ -->
+    <section class="section section--sources sources" id="sources" data-animate>
+      <div class="sources__container">
+        <span class="section-label">DATA SOURCES</span>
+        <h2 class="sources__headline">Mira's Agents source candidate intelligence from these channels.</h2>
+
+        <div class="sources__grid">
+          <div class="sources__chip">
+            <i data-lucide="linkedin" class="sources__icon"></i>
+            <span>LinkedIn</span>
+          </div>
+          <div class="sources__chip">
+            <i data-lucide="github" class="sources__icon"></i>
+            <span>GitHub</span>
+          </div>
+          <div class="sources__chip">
+            <i data-lucide="rocket" class="sources__icon"></i>
+            <span>AngelList</span>
+          </div>
+          <div class="sources__chip">
+            <i data-lucide="building-2" class="sources__icon"></i>
+            <span>Glassdoor</span>
+          </div>
+          <div class="sources__chip">
+            <i data-lucide="layers" class="sources__icon"></i>
+            <span>Stack Overflow</span>
+          </div>
+          <div class="sources__chip">
+            <i data-lucide="search" class="sources__icon"></i>
+            <span>Indeed</span>
+          </div>
+          <div class="sources__chip">
+            <i data-lucide="trophy" class="sources__icon"></i>
+            <span>Hired</span>
+          </div>
+          <div class="sources__chip">
+            <i data-lucide="at-sign" class="sources__icon"></i>
+            <span>X</span>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============================================
+         9. METRICS
+         ============================================ -->
+    <section class="section section--metrics metrics" id="metrics" data-animate>
+      <div class="metrics__container">
+        <span class="section-label">TRUST METRICS</span>
+        <h2 class="metrics__headline">We don't say "we're the best." We let the numbers talk.</h2>
+
+        <div class="metrics__grid">
+          <article class="metric-card">
+            <span class="metric-card__number">30+</span>
+            <p class="metric-card__label">Global candidate sources, far beyond LinkedIn</p>
+          </article>
+
+          <article class="metric-card">
+            <span class="metric-card__number">1,000+</span>
+            <p class="metric-card__label">Per-account Agent team daily reach capacity*</p>
+          </article>
+
+          <article class="metric-card">
+            <span class="metric-card__number">&lt; 4 hrs</span>
+            <p class="metric-card__label">Average Agent response time after candidate reply*</p>
+          </article>
+
+          <article class="metric-card">
+            <span class="metric-card__number">&lt; 48 hrs</span>
+            <p class="metric-card__label">From candidate confirmation to interview scheduled*</p>
+          </article>
+        </div>
+
+        <p class="metrics__statement">We don't build an "AI recruiting platform" &mdash; because recruiting doesn't need another platform. We build a <strong>Hiring Agent System</strong>. A category, not a feature list. The difference: a platform makes you operate faster. An Agent System gets the work done for you.</p>
+      </div>
+    </section>
+
+    <!-- ============================================
+         10. SOLUTIONS (Three-Audience Tabs)
+         ============================================ -->
+    <section class="section section--solutions solutions" id="solutions" data-animate>
+      <div class="solutions__container">
+        <span class="section-label">SOLUTIONS</span>
+        <h2 class="solutions__headline">Built for every recruiting team.</h2>
+
+        <!-- Tab navigation -->
+        <div class="solutions__tabs" role="tablist">
+          <button class="solutions__tab solutions__tab--active" role="tab" aria-selected="true" data-tab="enterprise">Enterprise</button>
+          <button class="solutions__tab" role="tab" aria-selected="false" data-tab="agency">Agency</button>
+          <button class="solutions__tab" role="tab" aria-selected="false" data-tab="founders">Founders</button>
+        </div>
+
+        <!-- Tab panels -->
+        <div class="solutions__panels">
+
+          <!-- Enterprise Panel -->
+          <article class="solutions__panel solutions__panel--active" role="tabpanel" data-panel="enterprise">
+            <div class="solutions__panel-content">
+              <h3 class="solutions__panel-title">Give your recruiting team an operating system.</h3>
+              <ul class="solutions__panel-values">
+                <li>
+                  <h4>Team-Level Parallel Ops</h4>
+                  <p>A 5-person recruiting team used to max out at 30 open roles. With Mira, the same team handles 80+ roles* simultaneously &mdash; because Agents take on the execution layer of sourcing, follow-up, and coordination.</p>
+                </li>
+                <li>
+                  <h4>Methodology Baked In</h4>
+                  <p>Your sourcing criteria, interview process, candidate evaluation framework &mdash; configure them once. Agents execute your playbook every time. No more "did this recruiter follow the process?"</p>
+                </li>
+                <li>
+                  <h4>Pipeline Visibility in Real Time</h4>
+                  <p>No more waiting for Friday's Excel report. Pipeline status, conversion rates, bottlenecks &mdash; all live, all the time.</p>
+                </li>
+              </ul>
+              <a href="#" class="solutions__panel-cta">Explore Enterprise Plans <i data-lucide="arrow-right"></i></a>
+            </div>
+            <div class="solutions__panel-stat">
+              <span class="solutions__panel-stat-number">73%</span>
+              <span class="solutions__panel-stat-label">reduction in manual sourcing hours on average*</span>
+            </div>
+          </article>
+
+          <!-- Agency Panel -->
+          <article class="solutions__panel" role="tabpanel" data-panel="agency" hidden>
+            <div class="solutions__panel-content">
+              <h3 class="solutions__panel-title">Every search consultant deserves a back office.</h3>
+              <ul class="solutions__panel-values">
+                <li>
+                  <h4>Double Your ROI Without Doubling Headcount</h4>
+                  <p>A single consultant typically manages 6 to 8 active cases*. With Mira's Agent team handling sourcing and screening, you focus on client relationships and candidate judgment &mdash; case capacity scales 2 to 3x*.</p>
+                </li>
+                <li>
+                  <h4>Exclusive Candidate Pools</h4>
+                  <p>Mira cross-references 30+ data sources* to surface candidates who aren't on page 1 of LinkedIn. Your shortlists stop overlapping with your competitors'.</p>
+                </li>
+                <li>
+                  <h4>Client Reporting on Autopilot</h4>
+                  <p>No more manual "weekly update" decks. Mira auto-generates client-facing progress reports &mdash; professional, real-time, in your brand format.</p>
+                </li>
+              </ul>
+              <a href="#" class="solutions__panel-cta">Explore Agency Plans <i data-lucide="arrow-right"></i></a>
+            </div>
+            <div class="solutions__panel-stat">
+              <span class="solutions__panel-stat-number">2.4x</span>
+              <span class="solutions__panel-stat-label">additional cases closed per consultant per month on average*</span>
+            </div>
+          </article>
+
+          <!-- Founders Panel -->
+          <article class="solutions__panel" role="tabpanel" data-panel="founders" hidden>
+            <div class="solutions__panel-content">
+              <h3 class="solutions__panel-title">Don't let hiring become your second full-time job.</h3>
+              <ul class="solutions__panel-values">
+                <li>
+                  <h4>Zero Learning Curve</h4>
+                  <p>No need to learn 17 modules in an ATS. Describe who you're looking for in plain language. Mira figures out the rest.</p>
+                </li>
+                <li>
+                  <h4>Founder Intuition + Agent Execution</h4>
+                  <p>You know who's right for your team &mdash; that judgment is irreplaceable. But sourcing, scheduling, and chasing updates shouldn't cost you 15 hours a week*.</p>
+                </li>
+                <li>
+                  <h4>From Employee #1 to Employee #100</h4>
+                  <p>Hiring your first 5 people at seed stage and your 80th at Series B require completely different strategies. Mira grows with your stage. No tool migration. No restart.</p>
+                </li>
+              </ul>
+              <a href="#" class="solutions__panel-cta">Explore Founder Plans <i data-lucide="arrow-right"></i></a>
+            </div>
+            <div class="solutions__panel-stat">
+              <span class="solutions__panel-stat-number">12 hrs</span>
+              <span class="solutions__panel-stat-label">saved per week on hiring on average*</span>
+            </div>
+          </article>
+
+        </div>
+      </div>
+    </section>
+
+    <!-- ============================================
+         11. TESTIMONIALS
+         ============================================ -->
+    <section class="section section--testimonials testimonials" id="testimonials" data-animate>
+      <div class="testimonials__container">
+        <span class="section-label">TESTIMONIALS</span>
+        <p class="testimonials__category">A category, not a feature list.</p>
+
+        <div class="testimonials__grid">
+
+          <article class="testimonial-card">
+            <div class="testimonial-card__quote">
+              <i data-lucide="quote" class="testimonial-card__icon"></i>
+              <p>"I used to spend 3 hours a day on sourcing. Now I open Mira in the morning, and the Sourcing Agent has already surfaced 15 qualified candidates &mdash; each with a personalized outreach recommendation. I just decide who to contact first."</p>
+            </div>
+            <div class="testimonial-card__footer">
+              <div class="testimonial-card__avatar" aria-hidden="true">TL</div>
+              <div class="testimonial-card__meta">
+                <span class="testimonial-card__author">Talent Lead, Series B SaaS Company</span>
+                <span class="testimonial-card__note">simulated testimonial*</span>
+              </div>
+            </div>
+          </article>
+
+          <article class="testimonial-card">
+            <div class="testimonial-card__quote">
+              <i data-lucide="quote" class="testimonial-card__icon"></i>
+              <p>"We're a 3-person boutique search firm. After Mira, our monthly case closures went from 4 to 9. We didn't work harder &mdash; the execution layer finally stopped depending on humans."</p>
+            </div>
+            <div class="testimonial-card__footer">
+              <div class="testimonial-card__avatar" aria-hidden="true">PS</div>
+              <div class="testimonial-card__meta">
+                <span class="testimonial-card__author">Partner, Boutique Search Firm</span>
+                <span class="testimonial-card__note">simulated testimonial*</span>
+              </div>
+            </div>
+          </article>
+
+        </div>
+      </div>
+    </section>
+
+    <!-- ============================================
+         12. FINAL CTA
+         ============================================ -->
+    <section class="section section--dark final-cta" id="cta" data-animate>
+      <div class="final-cta__container">
+        <h2 class="final-cta__headline">Recruiting was never a solo job.</h2>
+        <p class="final-cta__subheadline">You deserve an AI team.</p>
+        <p class="final-cta__description">No need to replace your existing ATS. No team training required. Describe your first hiring mission, and Mira's Agent team starts working within 5 minutes.</p>
+        <div class="final-cta__actions">
+          <a href="#" class="btn btn--primary btn--lg">Get Started &mdash; Free, No Credit Card Required</a>
+          <a href="#" class="btn btn--outline btn--lg">Schedule a Demo &mdash; 15-Minute Product Walkthrough</a>
+        </div>
+        <a href="mailto:hi@mira.ai" class="final-cta__email">Contact Us &mdash; hi@mira.ai</a>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- ============================================
+       13. FOOTER
+       ============================================ -->
+  <footer class="footer">
+    <div class="footer__container">
+      <div class="footer__top">
+        <div class="footer__brand">
+          <a href="/" class="footer__logo">Mira</a>
+          <p class="footer__tagline">Your AI recruiting team.</p>
+        </div>
+
+        <div class="footer__columns">
+          <div class="footer__column">
+            <h4 class="footer__column-title">Platform</h4>
+            <ul class="footer__list">
+              <li><a href="#">Product</a></li>
+              <li><a href="#">Pricing</a></li>
+              <li><a href="#">Integrations</a></li>
+              <li><a href="#">API</a></li>
+            </ul>
+          </div>
+
+          <div class="footer__column">
+            <h4 class="footer__column-title">Solutions</h4>
+            <ul class="footer__list">
+              <li><a href="#">Enterprise</a></li>
+              <li><a href="#">Agencies</a></li>
+              <li><a href="#">Founders</a></li>
+              <li><a href="#">Startups</a></li>
+            </ul>
+          </div>
+
+          <div class="footer__column">
+            <h4 class="footer__column-title">Resources</h4>
+            <ul class="footer__list">
+              <li><a href="#">Blog</a></li>
+              <li><a href="#">Docs</a></li>
+              <li><a href="#">Changelog</a></li>
+              <li><a href="#">Status</a></li>
+            </ul>
+          </div>
+
+          <div class="footer__column">
+            <h4 class="footer__column-title">Company</h4>
+            <ul class="footer__list">
+              <li><a href="#">About</a></li>
+              <li><a href="#">Careers</a></li>
+              <li><a href="#">Contact</a></li>
+              <li><a href="#">Press</a></li>
+            </ul>
+          </div>
+        </div>
+      </div>
+
+      <div class="footer__bottom">
+        <div class="footer__bottom-left">
+          <span class="footer__system-name">MIRA.AI &mdash; HIRING AGENT SYSTEM</span>
+          <span class="footer__copyright">&copy; 2026 Mira Technologies</span>
+        </div>
+        <div class="footer__legal">
+          <a href="#">Terms</a>
+          <a href="#">Privacy</a>
+          <a href="#">Security</a>
+        </div>
+      </div>
+    </div>
+  </footer>
+
+  <script type="module" src="script.js"></script>
+</body>
+</html>

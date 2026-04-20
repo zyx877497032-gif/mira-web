@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Laser Beam Effect — Standalone</title>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body { background: #09090B; overflow: hidden; }
+    .container { position: relative; width: 100vw; height: 100vh; }
+    .webgl-wrap { position: absolute; top: 0; left: 0; width: 100%; height: 100%; }
+    .webgl-wrap canvas { display: block; width: 100%; height: 100%; }
+    .info { position: fixed; bottom: 20px; left: 20px; color: rgba(161,161,170,0.5); font: 12px/1.4 monospace; z-index: 10; }
+  </style>
+</head>
+<body>
+<div class="container">
+  <div class="webgl-wrap" id="laser-container"></div>
+</div>
+<div class="info">Laser Beam Effect — vertical beam + FBM smoke, cold gray-blue tones</div>
+<script>
+class LaserBeamEffect {
+  constructor(containerId) {
+    this._container = document.getElementById(containerId);
+    if (!this._container) return;
+    this._destroyed = false;
+    this._startTime = 0;
+    this._rafId = null;
+    this._canvas = document.createElement('canvas');
+    this._canvas.style.display = 'block';
+    this._canvas.style.width = '100%';
+    this._canvas.style.height = '100%';
+    this._container.appendChild(this._canvas);
+    this._gl = this._canvas.getContext('webgl', { alpha: true, premultipliedAlpha: false });
+    if (!this._gl) return;
+    this._initShaders();
+    this._initBuffers();
+    this._getUniformLocations();
+    this.resize();
+    window.addEventListener('resize', () => this.resize());
+    this._startRenderLoop();
+  }
+
+  _initShaders() {
+    const gl = this._gl;
+    const vertSrc = `attribute vec2 position; void main() { gl_Position = vec4(position, 0.0, 1.0); }`;
+    const fragSrc = `
+      precision highp float;
+      uniform vec2 u_resolution;
+      uniform float u_time;
+      float hash(vec2 p) { p = fract(p * vec2(123.34, 456.21)); p += dot(p, p + 45.32); return fract(p.x * p.y); }
+      float noise(vec2 x) { vec2 i = floor(x); vec2 f = fract(x); f = f*f*(3.0-2.0*f); return mix(mix(hash(i),hash(i+vec2(1,0)),f.x),mix(hash(i+vec2(0,1)),hash(i+vec2(1,1)),f.x),f.y); }
+      float fbm(vec2 x) { float v=0.0,a=0.5; vec2 s=vec2(100.0); mat2 r=mat2(cos(0.5),sin(0.5),-sin(0.5),cos(0.5)); for(int i=0;i<5;i++){v+=a*noise(x);x=r*x*2.0+s;a*=0.5;} return v; }
+      void main() {
+        vec2 uv = gl_FragCoord.xy / u_resolution.xy;
+        vec2 st = uv; st.x *= u_resolution.x / u_resolution.y;
+        float targetX = (u_resolution.x / u_resolution.y) * 0.5;
+        float dist = abs(st.x - targetX);
+        float core = 0.0015 / (dist + 0.0001); core = pow(core, 1.2);
+        float glow = 0.02 / (dist + 0.01);
+        vec2 noiseUv = vec2(st.x * 3.0, st.y * 2.0 - u_time * 0.15);
+        float smokeNoise = fbm(noiseUv);
+        float smokeMask = smoothstep(0.6, 0.0, dist);
+        float smoke = smokeNoise * smokeMask * 2.5;
+        vec3 coreColor = vec3(1.0);
+        vec3 glowColor = vec3(0.55, 0.58, 0.75);
+        vec3 smokeColor = vec3(0.35, 0.38, 0.55);
+        vec3 finalColor = coreColor*core + glowColor*glow + smokeColor*smoke*glow;
+        float verticalFade = smoothstep(0.0, 0.2, uv.y) * smoothstep(1.0, 0.7, uv.y);
+        finalColor *= verticalFade * (0.9 + 0.1 * sin(u_time * 2.0));
+        gl_FragColor = vec4(clamp(finalColor, 0.0, 1.0), 1.0);
+      }
+    `;
+    const vert = gl.createShader(gl.VERTEX_SHADER); gl.shaderSource(vert, vertSrc); gl.compileShader(vert);
+    const frag = gl.createShader(gl.FRAGMENT_SHADER); gl.shaderSource(frag, fragSrc); gl.compileShader(frag);
+    this._program = gl.createProgram(); gl.attachShader(this._program, vert); gl.attachShader(this._program, frag); gl.linkProgram(this._program);
+    this._vertShader = vert; this._fragShader = frag; gl.useProgram(this._program);
+  }
+
+  _initBuffers() {
+    const gl = this._gl;
+    const verts = new Float32Array([-1,-1, 1,-1, -1,1, -1,1, 1,-1, 1,1]);
+    this._buffer = gl.createBuffer(); gl.bindBuffer(gl.ARRAY_BUFFER, this._buffer); gl.bufferData(gl.ARRAY_BUFFER, verts, gl.STATIC_DRAW);
+    const pos = gl.getAttribLocation(this._program, 'position'); gl.enableVertexAttribArray(pos); gl.vertexAttribPointer(pos, 2, gl.FLOAT, false, 0, 0);
+  }
+
+  _getUniformLocations() { const gl = this._gl; this._uRes = gl.getUniformLocation(this._program, 'u_resolution'); this._uTime = gl.getUniformLocation(this._program, 'u_time'); }
+
+  resize() {
+    if (this._destroyed) return;
+    const dpr = Math.min(devicePixelRatio || 1, 2), r = this._container.getBoundingClientRect();
+    this._canvas.width = Math.round(r.width * dpr); this._canvas.height = Math.round(r.height * dpr);
+    const gl = this._gl; gl.viewport(0, 0, this._canvas.width, this._canvas.height); gl.useProgram(this._program); gl.uniform2f(this._uRes, this._canvas.width, this._canvas.height);
+  }
+
+  _startRenderLoop() {
+    this._startTime = performance.now();
+    const render = (t) => { if (this._destroyed) return; this._rafId = requestAnimationFrame(render); const gl = this._gl; gl.clearColor(0,0,0,0); gl.clear(gl.COLOR_BUFFER_BIT); gl.useProgram(this._program); gl.uniform1f(this._uTime, (t - this._startTime) * 0.001); gl.drawArrays(gl.TRIANGLES, 0, 6); };
+    this._rafId = requestAnimationFrame(render);
+  }
+
+  destroy() { this._destroyed = true; if (this._rafId) cancelAnimationFrame(this._rafId); }
+}
+
+new LaserBeamEffect('laser-container');
+</script>
+</body>
+</html>
