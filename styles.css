@@ -295,8 +295,8 @@ section[id] {
   gap: var(--space-3);
 }
 
-.nav__cta {
-  display: inline-flex;
+.nav .nav__cta {
+  display: none;
   align-items: center;
   justify-content: center;
   padding: 8px 18px;
@@ -389,6 +389,10 @@ section[id] {
 @media (min-width: 768px) {
   .nav__links {
     display: flex;
+  }
+
+  .nav .nav__cta {
+    display: inline-flex;
   }
 
   .nav__toggle {
