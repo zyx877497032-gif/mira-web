@@ -3346,15 +3346,7 @@ section[id] {
     grid-template-columns: 1fr 1fr;
   }
 
-  /* Methodology: 2 columns first, 3 at desktop */
-  .methodology__grid {
-    grid-template-columns: repeat(2, 1fr);
-  }
-
-  /* Orphan card (3rd item) spans full width at 2-col */
-  .methodology__grid > .methodology-card:last-child:nth-child(odd) {
-    grid-column: 1 / -1;
-  }
+  /* Methodology: stays 1-col at tablet, jumps to 3-col at 1024px */
 
   /* Metrics: 2 columns */
   .metrics__grid {
